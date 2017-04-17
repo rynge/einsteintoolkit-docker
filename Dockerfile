@@ -1,6 +1,6 @@
 # einsteintoolkit
 FROM ubuntu:16.04
-MAINTAINER Erik Schnetter <schnetter@gmail.com>
+MAINTAINER Mats Rynge <rynge@isi.edu>
 
 # Install necessary Ubuntu packages
 RUN apt-get update &&                                   \
@@ -27,17 +27,15 @@ RUN chmod a+rx /tmp/GetComponents &&            \
     chmod a+r /tmp/einsteintoolkit.th
 
 # Configure the machine
-RUN useradd -m scientist
-USER scientist
-WORKDIR /home/scientist
 RUN git config --global user.email "scientist@localhost" &&             \
     git config --global user.name "Scientist, Einstein Toolkit" &&      \
     echo 'einsteintoolkit' >"$HOME/.hostname"
 
 # Download the Einstein Toolkit
-RUN mkdir Cactus simulations &&                                 \
+WORKDIR /opt
+RUN mkdir /opt/Cactus && \
     /tmp/GetComponents --parallel /tmp/einsteintoolkit.th
-WORKDIR Cactus
+WORKDIR /opt/Cactus
 # TODO: Move these into the Einstein Toolkit
 COPY /einsteintoolkit.ini simfactory/mdb/machines/
 COPY /einsteintoolkit.cfg simfactory/mdb/optionlists/
@@ -47,12 +45,5 @@ COPY /einsteintoolkit.run simfactory/mdb/runscripts/
 COPY /defs.local.ini simfactory/etc/
 
 # Build
-RUN ./simfactory/bin/sim build --debug
+RUN ./simfactory/bin/sim build
 
-# Export source and simulation directories
-VOLUME /home/scientist/Cactus /home/scientist/simulations
-
-# Run Simfactory by default
-# Hint: Use "execute" to execute arbitrary shell commands
-ENTRYPOINT ["./simfactory/bin/sim"]
-CMD []

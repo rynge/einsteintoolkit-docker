@@ -1,5 +1,11 @@
 # Building and using Einstein Toolkit Docker containers
 
+## Note for Open Science Grid
+
+This is a repo forked from https://github.com/eschnett/einsteintoolkit-docker
+, and modified for use as a Singularity image under the Open Science Grid
+OSGVO. 
+
 ## Overview
 
 Docker makes it easy to set up a system configuration once, and then
